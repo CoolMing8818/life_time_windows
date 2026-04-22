@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人生的关键窗口</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="ambient ambient-left"></div>
+      <div class="ambient ambient-right"></div>
+
+      <header class="hero panel">
+        <div class="hero-copy">
+          <p class="eyebrow">Life Window Simulator</p>
+          <h1>人生的关键窗口</h1>
+          <p class="hero-subtitle">
+            不同年龄，面对同一件事，难度和机会都会不同。拖动年龄，观察人生节奏如何改变选择成本与行动时机。
+          </p>
+        </div>
+
+        <div class="hero-metrics">
+          <article class="metric-card age-card">
+            <span class="metric-label">当前年龄</span>
+            <strong class="metric-value" id="currentAgeDisplay">25岁</strong>
+            <span class="metric-hint" id="ageMood">人生并不是统一模板，而是动态窗口。</span>
+          </article>
+
+          <article class="metric-card">
+            <span class="metric-label">人生阶段</span>
+            <strong class="metric-value" id="stageName">探索启航</strong>
+            <span class="metric-hint" id="stageSummary">试错、积累和决定方向的时期。</span>
+          </article>
+
+          <article class="metric-card top-actions-card">
+            <span class="metric-label">当前更顺势的三件事</span>
+            <ul class="top-actions" id="topActions"></ul>
+          </article>
+        </div>
+
+        <div class="music-panel" id="musicPanel">
+          <div class="music-copy">
+            <span class="metric-label">氛围音乐</span>
+            <strong id="musicTitle">盛哲 - 在你的身边</strong>
+            <span class="metric-hint" id="musicStatus">点击播放，为这张人生节奏地图加入时间感。</span>
+          </div>
+
+          <div class="music-controls">
+            <button type="button" class="music-button" id="musicToggle">播放音乐</button>
+            <label class="music-volume" for="musicVolume">
+              <span>音量</span>
+              <input type="range" id="musicVolume" min="0" max="100" value="22" />
+            </label>
+          </div>
+
+          <div class="music-progress-row">
+            <span id="musicTimeCurrent">00:00</span>
+            <input type="range" id="musicProgress" min="0" max="100" value="0" />
+            <span id="musicTimeDuration">00:00</span>
+          </div>
+
+          <audio id="bgm" loop preload="auto" autoplay>
+            <source src="盛哲 - 在你的身边.mp3" type="audio/mpeg" />
+          </audio>
+        </div>
+      </header>
+
+      <section class="panel control-panel">
+        <div class="control-header">
+          <div>
+            <p class="section-label">年龄控制区</p>
+            <h2>沿着人生轨迹滑动</h2>
+          </div>
+          <div class="stage-badge" id="stageBadge">探索启航</div>
+        </div>
+
+        <div class="age-track-wrapper">
+          <div class="track-decor">
+            <span>1</span>
+            <span>20</span>
+            <span>40</span>
+            <span>60</span>
+            <span>80</span>
+            <span>100</span>
+          </div>
+          <input
+            type="range"
+            id="ageSlider"
+            min="1"
+            max="100"
+            value="25"
+            aria-label="年龄滑动条"
+          />
+          <div class="decade-markers" aria-hidden="true">
+            <span>童年</span>
+            <span>青春</span>
+            <span>青年</span>
+            <span>中年</span>
+            <span>成熟</span>
+            <span>长者</span>
+          </div>
+        </div>
+
+        <div class="control-insights">
+          <div class="insight-box">
+            <span class="mini-label">阶段提示</span>
+            <strong id="stageNarrative">这是适合建立方向感与行动惯性的阶段。</strong>
+          </div>
+          <div class="insight-box">
+            <span class="mini-label">机会提醒</span>
+            <strong id="opportunityHint">你可以优先关注窗口较宽、转化效率更高的事件。</strong>
+          </div>
+          <div class="insight-box">
+            <span class="mini-label">当前筛选结果</span>
+            <strong><span id="visibleCount">10</span> 个关键事件正在联动更新</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel toolbar-panel">
+        <div class="toolbar-head">
+          <div>
+            <p class="section-label">事件总览</p>
+            <h2>根据年龄动态显示每个事件的重要程度</h2>
+          </div>
+          <div class="tab-summary">
+            <strong id="activeCategoryTitle">全量事件列表</strong>
+            <span id="activeCategoryHint">不再按人生阶段拆分，直接从完整事件池里看当前年龄下更值得关注的事情。</span>
+          </div>
+        </div>
+
+        <div
+          class="stage-overview"
+          id="stageOverview"
+          aria-label="事件分类筛选"
+        ></div>
+
+        <div class="sort-row">
+          <div class="toolbar-block sort-block">
+            <label class="section-label" for="sortMode">排序方式</label>
+            <select id="sortMode">
+              <option value="default">按事件主题浏览</option>
+              <option value="best">按当前重要程度排序</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <main class="panel cards-panel">
+        <div class="cards-header">
+          <div>
+            <p class="section-label">事件卡片区</p>
+            <h2>关键事件会随着年龄改变重要程度</h2>
+          </div>
+          <p class="cards-note">点击任意卡片可查看该事件在 1-100 岁中的重要度变化曲线。</p>
+        </div>
+        <div class="event-grid" id="eventGrid"></div>
+      </main>
+
+      <aside class="panel side-panel">
+        <section class="side-section">
+          <p class="section-label">颜色说明</p>
+          <div class="legend-list">
+            <span class="legend-item"><i class="legend-dot tone-golden"></i>关键窗口</span>
+            <span class="legend-item"><i class="legend-dot tone-easy"></i>高优先级</span>
+            <span class="legend-item"><i class="legend-dot tone-normal"></i>值得布局</span>
+            <span class="legend-item"><i class="legend-dot tone-challenge"></i>可以准备</span>
+            <span class="legend-item"><i class="legend-dot tone-hard"></i>低优先级</span>
+          </div>
+        </section>
+
+        <section class="side-section">
+          <p class="section-label">使用方式</p>
+          <p class="side-copy">
+            这个页面更像一张人生节奏地图，而不是标准答案。它帮助你观察“做同一件事时，年龄如何改变投入成本、机会密度与外部反馈”。
+          </p>
+        </section>
+
+        <section class="side-section quote-box">
+          <p>窗口不会永远停留，但每个阶段也都会打开新的门。</p>
+        </section>
+      </aside>
+
+      <footer class="panel footer-panel">
+        <p class="section-label">说明区</p>
+        <h2>这是一个启发思考的人生节奏模拟工具</h2>
+        <p>
+          页面中的规则是基于常见人生路径构建的启发式模型，用于帮助用户理解“时间与选择的关系”，并不代表绝对结论。真正重要的是，你能在当前阶段识别更适合投入的方向，并用自己的节奏做决定。
+        </p>
+      </footer>
+    </div>
+
+    <div class="modal hidden" id="detailModal" aria-hidden="true">
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="modalClose" aria-label="关闭详情">×</button>
+        <div class="modal-head">
+          <div>
+            <p class="section-label" id="modalCategory">事件详情</p>
+            <h3 id="modalTitle">学历提升</h3>
+          </div>
+          <div class="modal-status" id="modalStatusBadge">黄金窗口</div>
+        </div>
+
+        <p class="modal-description" id="modalDescription"></p>
+
+        <div class="modal-meta">
+          <div class="modal-meta-item">
+            <span>最佳窗口</span>
+            <strong id="modalWindow"></strong>
+          </div>
+          <div class="modal-meta-item">
+            <span>当前建议</span>
+            <strong id="modalAdvice"></strong>
+          </div>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-header">
+            <span>年龄变化曲线</span>
+            <span id="chartAgeHint">当前年龄 25 岁</span>
+          </div>
+          <svg id="detailChart" viewBox="0 0 720 280" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div class="rule-strip" id="ruleStrip"></div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
